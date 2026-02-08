@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Научный калькулятор</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="calculator-container">
+        <h1>Научный калькулятор</h1>
+        
+        <div class="calculator">
+            <div class="display">
+                <input type="text" id="display" readonly>
+                <div id="result">0</div>
+            </div>
+            
+            <div class="buttons">
+                <!-- Первый ряд -->
+                <button onclick="clearAll()" class="btn-clear">C</button>
+                <button onclick="clearEntry()" class="btn-clear">CE</button>
+                <button onclick="deleteLast()" class="btn-operation">⌫</button>
+                <button onclick="appendOperator('/')" class="btn-operation">÷</button>
+                
+                <!-- Второй ряд -->
+                <button onclick="appendFunction('sin(')" class="btn-function">sin</button>
+                <button onclick="appendNumber('7')" class="btn-number">7</button>
+                <button onclick="appendNumber('8')" class="btn-number">8</button>
+                <button onclick="appendNumber('9')" class="btn-number">9</button>
+                <button onclick="appendOperator('*')" class="btn-operation">×</button>
+                
+                <!-- Третий ряд -->
+                <button onclick="appendFunction('cos(')" class="btn-function">cos</button>
+                <button onclick="appendNumber('4')" class="btn-number">4</button>
+                <button onclick="appendNumber('5')" class="btn-number">5</button>
+                <button onclick="appendNumber('6')" class="btn-number">6</button>
+                <button onclick="appendOperator('-')" class="btn-operation">-</button>
+                
+                <!-- Четвертый ряд -->
+                <button onclick="appendFunction('tan(')" class="btn-function">tan</button>
+                <button onclick="appendNumber('1')" class="btn-number">1</button>
+                <button onclick="appendNumber('2')" class="btn-number">2</button>
+                <button onclick="appendNumber('3')" class="btn-number">3</button>
+                <button onclick="appendOperator('+')" class="btn-operation">+</button>
+                
+                <!-- Пятый ряд -->
+                <button onclick="appendFunction('log(')" class="btn-function">log</button>
+                <button onclick="appendOperator('(')" class="btn-operation">(</button>
+                <button onclick="appendNumber('0')" class="btn-number">0</button>
+                <button onclick="appendOperator(')')" class="btn-operation">)</button>
+                <button onclick="calculate()" class="btn-equals">=</button>
+                
+                <!-- Шестой ряд -->
+                <button onclick="appendFunction('ln(')" class="btn-function">ln</button>
+                <button onclick="appendConstant('pi')" class="btn-constant">π</button>
+                <button onclick="appendNumber('.')" class="btn-number">.</button>
+                <button onclick="appendConstant('e')" class="btn-constant">e</button>
+                <button onclick="appendFunction('sqrt(')" class="btn-function">√</button>
+                
+                <!-- Седьмой ряд -->
+                <button onclick="appendFunction('factorial(')" class="btn-function">n!</button>
+                <button onclick="appendOperator('^')" class="btn-operation">x²</button>
+                <button onclick="appendFunction('exp(')" class="btn-function">eˣ</button>
+                <button onclick="appendFunction('abs(')" class="btn-function">|x|</button>
+                <button onclick="appendOperator('**')" class="btn-operation">xʸ</button>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>Инструкция:</h3>
+            <ul>
+                <li><strong>Основные операции:</strong> +, -, ×, ÷</li>
+                <li><strong>Тригонометрия:</strong> sin, cos, tan (в радианах)</li>
+                <li><strong>Логарифмы:</strong> log (по основанию 10), ln (натуральный)</li>
+                <li><strong>Константы:</strong> π (pi), e</li>
+                <li><strong>Функции:</strong> √ (корень), |x| (модуль), n! (факториал)</li>
+                <li><strong>Степени:</strong> x² (квадрат), xʸ (степень)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
