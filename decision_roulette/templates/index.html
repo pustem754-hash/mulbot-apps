@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рулетка решений</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Рулетка Решений</h1>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <input type="text" id="optionInput" placeholder="Введите вариант..." maxlength="20">
+                <button onclick="addOption()">Добавить</button>
+            </div>
+            
+            <div class="options-list" id="optionsList">
+                <!-- Варианты будут добавляться сюда -->
+            </div>
+            
+            <div class="controls">
+                <button onclick="clearOptions()" class="clear-btn">Очистить все</button>
+                <button onclick="spinRoulette()" id="spinBtn" class="spin-btn" disabled>🎲 Крутить рулетку!</button>
+            </div>
+        </div>
+        
+        <div class="roulette-section">
+            <div class="roulette-container">
+                <div class="pointer">▼</div>
+                <canvas id="rouletteWheel" width="300" height="300"></canvas>
+            </div>
+        </div>
+        
+        <div id="result" class="result hidden">
+            <h2>🎉 Победитель:</h2>
+            <div id="winnerText"></div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
