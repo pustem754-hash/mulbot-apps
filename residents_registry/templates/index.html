@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реестр жильцов</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { color: white; margin-bottom: 30px; text-align: center; font-size: 2.5em; }
+        .toolbar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .add-btn {
+            padding: 15px 30px;
+            border-radius: 12px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .search-box { display: flex; gap: 10px; flex: 1; }
+        .search-box input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid white;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+        .search-box button {
+            padding: 15px 30px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        th, td { padding: 15px; text-align: left; }
+        th { background: #667eea; color: white; font-weight: 600; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        tr:hover { background: #e9ecef; }
+        .actions { display: flex; gap: 8px; }
+        .actions a {
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .btn-view { background: #17a2b8; color: white; }
+        .btn-edit { background: #ffc107; color: #333; }
+        .btn-delete { background: #dc3545; color: white; }
+        .flash {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            background: #d4edda;
+            color: #155724;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👥 Реестр жильцов</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="toolbar">
+            <a href="{{ url_for('add') }}" class="add-btn">➕ Добавить жильца</a>
+            <form method="GET" class="search-box">
+                <input type="text" name="search" placeholder="🔍 Поиск..." value="{{ search }}">
+                <button>Найти</button>
+            </form>
+        </div>
+        
+        {% if residents %}
+        <table>
+            <thead>
+                <tr>
+                    <th>🏠 Кв.</th>
+                    <th>👤 ФИО</th>
+                    <th>📄 Паспорт</th>
+                    <th>📅 Дата рожд.</th>
+                    <th>📞 Телефон</th>
+                    <th>⚙️ Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in residents %}
+                <tr>
+                    <td><strong>№{{ r.apartment }}</strong></td>
+                    <td>{{ r.full_name }}</td>
+                    <td>{{ r.passport_series }} {{ r.passport_number }}</td>
+                    <td>{{ r.birth_date or '—' }}</td>
+                    <td>{{ r.phone or '—' }}</td>
+                    <td class="actions">
+                        <a href="{{ url_for('view', id=r.id) }}" class="btn-view">👁️</a>
+                        <a href="{{ url_for('edit', id=r.id) }}" class="btn-edit">✏️</a>
+                        <a href="{{ url_for('delete', id=r.id) }}" class="btn-delete" onclick="return confirm('Удалить?')">🗑️</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center;color:white;padding:60px;background:rgba(255,255,255,0.1);border-radius:15px">
+            📭 Жильцов пока нет
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

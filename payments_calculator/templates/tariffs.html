@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тарифы ЖКХ</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        h1 { color: white; margin-bottom: 30px; text-align: center; }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .tariff-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .tariff-row:last-child { border-bottom: none; }
+        .back {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚙️ Действующие тарифы</h1>
+        <div class="card">
+            <div class="tariff-row">
+                <span>🏠 Квартплата</span>
+                <strong>{{ tariffs.rent_per_m2 }} ₽/м²</strong>
+            </div>
+            <div class="tariff-row">
+                <span>💧 Холодная вода</span>
+                <strong>{{ tariffs.cold_water }} ₽/м³</strong>
+            </div>
+            <div class="tariff-row">
+                <span>🔥 Горячая вода</span>
+                <strong>{{ tariffs.hot_water }} ₽/м³</strong>
+            </div>
+            <div class="tariff-row">
+                <span>⚡ Электричество</span>
+                <strong>{{ tariffs.electricity }} ₽/кВт⋅ч</strong>
+            </div>
+            <div class="tariff-row">
+                <span>🔥 Газ</span>
+                <strong>{{ tariffs.gas }} ₽/м³</strong>
+            </div>
+            <div class="tariff-row">
+                <span>🗑️ Вывоз мусора</span>
+                <strong>{{ tariffs.garbage }} ₽/мес</strong>
+            </div>
+            <div class="tariff-row">
+                <span>🔧 Содержание и ремонт</span>
+                <strong>{{ tariffs.maintenance }} ₽/мес</strong>
+            </div>
+        </div>
+        <div class="back">
+            <a href="{{ url_for('index') }}">← Назад к калькулятору</a>
+        </div>
+    </div>
+</body>
+</html>

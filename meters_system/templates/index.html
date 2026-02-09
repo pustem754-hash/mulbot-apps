@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Учёт показаний счётчиков</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: white; margin-bottom: 30px; text-align: center; font-size: 2.5em; }
+        .add-btn {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .apartments {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .apartment-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.2s;
+        }
+        .apartment-card:hover { transform: translateY(-5px); }
+        .apartment-card h2 { color: #667eea; font-size: 2em; }
+        .empty {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 60px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Учёт показаний счётчиков</h1>
+        <a href="{{ url_for('add') }}" class="add-btn">➕ Внести показания</a>
+        
+        {% if apartments %}
+        <div class="apartments">
+            {% for apt in apartments %}
+            <a href="{{ url_for('apartment_history', apt=apt) }}" class="apartment-card">
+                <h2>🏠</h2>
+                <p style="font-size: 1.5em; font-weight: bold; margin-top: 10px;">Квартира №{{ apt }}</p>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty">
+            📭 Показаний пока нет<br>
+            <small>Внесите первые показания!</small>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

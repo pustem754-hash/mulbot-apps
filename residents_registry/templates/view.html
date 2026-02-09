@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Карточка жильца</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 { color: #667eea; margin-bottom: 30px; }
+        .info-grid {
+            display: grid;
+            gap: 20px;
+        }
+        .info-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .label { font-weight: 600; color: #666; }
+        .value { color: #333; }
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .actions a {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .btn-edit { background: #ffc107; color: #333; }
+        .btn-back { background: #6c757d; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>👤 Карточка жильца</h1>
+            <div class="info-grid">
+                <div class="info-row">
+                    <div class="label">🏠 Квартира:</div>
+                    <div class="value"><strong>№{{ resident.apartment }}</strong></div>
+                </div>
+                <div class="info-row">
+                    <div class="label">👤 ФИО:</div>
+                    <div class="value">{{ resident.full_name }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="label">📄 Паспорт:</div>
+                    <div class="value">{{ resident.passport_series }} {{ resident.passport_number }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="label">🏛️ Кем выдан:</div>
+                    <div class="value">{{ resident.passport_issued_by or '—' }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="label">📅 Дата выдачи:</div>
+                    <div class="value">{{ resident.passport_issued_date or '—' }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="label">🎂 Дата рождения:</div>
+                    <div class="value">{{ resident.birth_date or '—' }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="label">📞 Телефон:</div>
+                    <div class="value">{{ resident.phone or '—' }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="label">📧 Email:</div>
+                    <div class="value">{{ resident.email or '—' }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="label">📅 Зарегистрирован:</div>
+                    <div class="value">{{ resident.registration_date.strftime('%d.%m.%Y %H:%M') }}</div>
+                </div>
+            </div>
+            <div class="actions">
+                <a href="{{ url_for('edit', id=resident.id) }}" class="btn-edit">✏️ Редактировать</a>
+                <a href="{{ url_for('index') }}" class="btn-back">← Назад к списку</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система заявок ЖКХ</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: white; margin-bottom: 30px; text-align: center; font-size: 2.5em; }
+        .add-btn {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .add-btn:hover { transform: translateY(-2px); }
+        .tickets {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .ticket {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+        .ticket:hover { transform: translateY(-5px); }
+        .ticket h3 { color: #667eea; margin-bottom: 15px; font-size: 1.3em; }
+        .ticket p { margin: 10px 0; color: #555; line-height: 1.6; }
+        .ticket .date { color: #999; font-size: 0.85em; margin-top: 10px; }
+        .status {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .status.new { background: #ffd700; color: #333; }
+        .status.progress { background: #4CAF50; color: white; }
+        .status.done { background: #888; color: white; }
+        .actions { margin-top: 15px; }
+        .actions a {
+            display: inline-block;
+            margin: 5px 5px 0 0;
+            padding: 8px 18px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+        .actions a:hover { background: #5568d3; }
+        .empty {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 60px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 Система заявок ЖКХ</h1>
+        <a href="{{ url_for('add') }}" class="add-btn">➕ Новая заявка</a>
+        
+        {% if tickets %}
+        <div class="tickets">
+            {% for ticket in tickets %}
+            <div class="ticket">
+                <h3>🏠 Квартира №{{ ticket.apartment }}</h3>
+                <p>{{ ticket.description }}</p>
+                <div class="date">📅 {{ ticket.created_at.strftime('%d.%m.%Y %H:%M') }}</div>
+                <span class="status {% if ticket.status == 'Новая' %}new{% elif ticket.status == 'В работе' %}progress{% else %}done{% endif %}">
+                    {{ ticket.status }}
+                </span>
+                <div class="actions">
+                    {% if ticket.status == 'Новая' %}
+                    <a href="{{ url_for('update_status', id=ticket.id, status='В работе') }}">▶️ В работу</a>
+                    {% elif ticket.status == 'В работе' %}
+                    <a href="{{ url_for('update_status', id=ticket.id, status='Выполнена') }}">✅ Выполнена</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty">
+            📭 Заявок пока нет<br>
+            <small>Создайте первую заявку!</small>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

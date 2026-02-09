@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Внести показания</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .form-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 { color: #667eea; margin-bottom: 30px; text-align: center; }
+        label { 
+            display: block; 
+            margin: 20px 0 8px; 
+            color: #333; 
+            font-weight: 600;
+        }
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .meter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+        }
+        .back { text-align: center; margin-top: 20px; }
+        .back a { color: #667eea; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>📊 Внести показания</h1>
+        <form method="POST">
+            <label>🏠 Номер квартиры:</label>
+            <input type="text" name="apartment" required placeholder="Например: 42">
+            
+            <div class="meter-grid">
+                <div>
+                    <label>💧 Холодная вода (м³):</label>
+                    <input type="number" step="0.01" name="cold_water" required>
+                </div>
+                <div>
+                    <label>🔥 Горячая вода (м³):</label>
+                    <input type="number" step="0.01" name="hot_water" required>
+                </div>
+                <div>
+                    <label>⚡ Электричество (кВт⋅ч):</label>
+                    <input type="number" step="0.01" name="electricity" required>
+                </div>
+                <div>
+                    <label>🔥 Газ (м³):</label>
+                    <input type="number" step="0.01" name="gas" value="0">
+                </div>
+            </div>
+            
+            <button type="submit">✅ Сохранить показания</button>
+        </form>
+        <div class="back">
+            <a href="{{ url_for('index') }}">← Назад</a>
+        </div>
+    </div>
+</body>
+</html>
