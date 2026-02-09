@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой блокнот</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 Мой блокнот</h1>
+            <p>Создавайте и управляйте своими заметками</p>
+        </header>
+
+        <!-- Форма добавления заметки -->
+        <div class="add-note-section">
+            <h2>Добавить новую заметку</h2>
+            <form id="noteForm">
+                <div class="form-group">
+                    <label for="noteTitle">Заголовок:</label>
+                    <input type="text" id="noteTitle" placeholder="Введите заголовок заметки..." required>
+                </div>
+                <div class="form-group">
+                    <label for="noteContent">Содержание:</label>
+                    <textarea id="noteContent" placeholder="Введите текст заметки..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <span id="submitText">Добавить заметку</span>
+                </button>
+                <button type="button" id="cancelEdit" class="btn btn-secondary" style="display: none;">
+                    Отменить редактирование
+                </button>
+            </form>
+        </div>
+
+        <!-- Поиск заметок -->
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="🔍 Поиск по заметкам...">
+        </div>
+
+        <!-- Список заметок -->
+        <div class="notes-section">
+            <h2>Мои заметки (<span id="notesCount">{{ notes|length }}</span>)</h2>
+            <div id="notesList">
+                {% if notes %}
+                    {% for note in notes %}
+                    <div class="note-card" data-id="{{ note.id }}">
+                        <div class="note-header">
+                            <h3 class="note-title">{{ note.title }}</h3>
+                            <div class="note-actions">
+                                <button onclick="editNote({{ note.id }})" class="btn-icon edit-btn" title="Редактировать">
+                                    ✏️
+                                </button>
+                                <button onclick="deleteNote({{ note.id }})" class="btn-icon delete-btn" title="Удалить">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                        <p class="note-content">{{ note.content }}</p>
+                        <div class="note-date">
+                            Создано: {{ note.created_at }}
+                            {% if note.updated_at %}
+                            <br>Обновлено: {{ note.updated_at }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <p>📝 У вас пока нет заметок</p>
+                        <p>Создайте свою первую заметку!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Уведомления -->
+        <div id="notification" class="notification"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
