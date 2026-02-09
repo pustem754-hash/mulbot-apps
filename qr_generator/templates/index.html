@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .qr-result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: none;
+        }
+
+        .qr-image {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+        }
+
+        .stats {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #1976d2;
+            font-weight: bold;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            color: #667eea;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔲 QR Generator</h1>
+        
+        <div class="stats">
+            Создано QR кодов: <span id="totalCount">{{ total_qr_codes }}</span>
+        </div>
+
+        <form id="qrForm">
+            <div class="form-group">
+                <label for="textInput">Введите текст или URL:</label>
+                <input type="text" id="textInput" placeholder="Например: https://example.com или любой текст" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" id="generateBtn">
+                Генерировать QR код
+            </button>
+        </form>
+
+        <div class="loading" id="loading">
+            Генерация QR кода...
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="qr-result" id="qrResult">
+            <h3>Ваш QR код готов!</h3>
+            <img id="qrImage" class="qr-image" alt="QR Code">
+            <br>
+            <button class="btn btn-success" id="downloadBtn">
+                📥 Скачать PNG
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('qrForm');
+        const textInput = document.getElementById('textInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const qrResult = document.getElementById('qrResult');
+        const qrImage = document.getElementById('qrImage');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const totalCount = document.getElementById('totalCount');
+        
+        let currentFilename = null;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const text = textInput.value.trim();
+            if (!text) {
+                showError('Пожалуйста, введите текст или URL');
+                return;
+            }
+
+            setLoading(true);
+            hideError();
+            hideResult();
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: text })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Показываем результат
+                qrImage.src = data.image;
+                currentFilename = data.filename;
+                totalCount.textContent = data.total_count;
+                showResult();
+
+            } catch (err) {
+                showError('Ошибка генерации QR кода: ' + err.message);
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            if (currentFilename) {
+                window.open(`/download/${currentFilename}`, '_blank');
+            }
+        });
+
+        function setLoading(isLoading) {
+            loading.style.display = isLoading ? 'block' : 'none';
+            generateBtn.disabled = isLoading;
+            generateBtn.textContent = isLoading ? 'Генерация...' : 'Генерировать QR код';
+        }
+
+        function showError(message) {
+            error.textContent = message;
+            error.style.display = 'block';
+        }
+
+        function hideError() {
+            error.style.display = 'none';
+        }
+
+        function showResult() {
+            qrResult.style.display = 'block';
+        }
+
+        function hideResult() {
+            qrResult.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
